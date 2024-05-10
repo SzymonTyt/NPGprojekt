@@ -1,4 +1,5 @@
 import pygame
+import sys
 from pygame.locals import *
 
 pygame.init()
@@ -14,7 +15,7 @@ def main():
     szerokoscHb, wysokoscHb = map(int, input("Jaka wielkosc ma miec hitbox postaci (szerokosc wysokosc): ").split())
 
     hitbox = hitbox_ustalony_przez_gracza(0, 0, szerokoscHb, wysokoscHb)
-    hitbox_speed = 1  # Minimalna wartość przesunięcia
+    hitbox_speed = 5  # Szybkosc poruszania hitboxa
 
     while True:
         for event in pygame.event.get():
@@ -22,22 +23,31 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+        # Sprawdzenie nacisnieetych przyciskow
+        keys = pygame.key.get_pressed()
+        if keys[K_a]:
+            hitbox.x -= hitbox_speed
+        if keys[K_d]:
+            hitbox.x += hitbox_speed
+        if keys[K_w]:
+            hitbox.y -= hitbox_speed
+        if keys[K_s]:
+            hitbox.y += hitbox_speed
+
         # Sprawdzenie, czy hitbox dotyka krawedzi okna
-        if hitbox.left <= 0 or hitbox.right >= 800 or hitbox.top <= 0 or hitbox.bottom >= 500:
-            # Odbicie hitboxa w strone srodka 
-            if hitbox.left <= 0:
-                hitbox.x += hitbox_speed
-            if hitbox.right >= 800:
-                hitbox.x -= hitbox_speed
-            if hitbox.top <= 0:
-                hitbox.y += hitbox_speed
-            if hitbox.bottom >= 500:
-                hitbox.y -= hitbox_speed
+        if hitbox.left <= 0:
+            hitbox.left = 0
+        if hitbox.right >= 800:
+            hitbox.right = 800
+        if hitbox.top <= 0:
+            hitbox.top = 0
+        if hitbox.bottom >= 500:
+            hitbox.bottom = 500
 
         window.fill((255, 255, 255))  # Wypelnienie okna na bialo
         pygame.draw.rect(window, (0, 0, 0), hitbox)  # Rysowanie hitboxa na ekranie
 
         pygame.display.update()
 
-
-
+if __name__ == "__main__":
+    main()
