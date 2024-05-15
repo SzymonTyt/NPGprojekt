@@ -6,12 +6,27 @@ from pygame.locals import *
 pygame.init()
 
 
-#przyklad uzycia klasy wrog
-wrog = Wrog("Nazwa Wroga", (255, 0, 0), 100, 100, 50, 30)
+screen = pygame.display.set_mode((800, 600))
 
-# Wywołanie metody wyświetlającej informacje o wrogu
-wrog.wyswietlanie_informacji_o_wrogu()
+wrog = Wrog("Nazwa", (255, 0, 0), 100, 100, 50, 50)
+pocisk = Pocisk("Pocisk", (0, 255, 0), 0, 0, 10, 10)
 
+clock = pygame.time.Clock()
+
+running = True
+while running:
+    dt = clock.tick(60) / 1000.0
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    pocisk.update(dt)
+
+    screen.fill((255, 255, 255))  # Czyszczenie ekranu i rysowanie na nowo wroga i pocisku dla płynności
+    pygame.draw.rect(screen, wrog.kolor_wroga, wrog.rect)
+    pygame.draw.rect(screen, pocisk.kolor_wroga, pocisk.rect)
+    pygame.display.flip()
 
 
 
