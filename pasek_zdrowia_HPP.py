@@ -20,6 +20,24 @@ class Wrog:
         print(f"Szerokość wroga: {self.rect.width}")
         print(f"Wysokość wroga: {self.rect.height}")
 
+import pygame
+
+class Wrog:
+    def __init__(self, nazwa_wroga, kolor_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga):
+        self.nazwa = nazwa_wroga
+        self.kolor_wroga = kolor_wroga
+        self.rect = pygame.Rect(wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga)
+        self.wspolrzedna_x = wspolrzedna_x  # Poprawka: ustawiamy współrzędną x na początkową wartość
+
+class Pocisk(Wrog):
+    def __init__(self, nazwa_wroga, kolor_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga):
+        super().__init__(nazwa_wroga, kolor_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga)
+        self.predkosc_x = 5
+
+    def update(self, dt):
+        self.rect.x += self.predkosc_x * dt
+
+
 
 class Postac:
     def __init__(self, nazwa_postaci, kolor_postaci, wspolrzedna_x, wspolrzedna_y, szerokosc_postaci, wysokosc_postaci):

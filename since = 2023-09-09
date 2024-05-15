@@ -1,0 +1,81 @@
+[33mcommit b727b3208671d99b1df24cfdf07e0fab3fa0d2d6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mAdamFrydel[m[33m, [m[1;31morigin/AdamFrydel[m[33m)[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Mon May 13 22:49:14 2024 +0200
+
+    Dodanie klas na postac i wroga ktore sa potrzebne aby okreslic pozycje podczas zadawania ciosu
+
+[33mcommit c3f4ed7b158432fb8f304504057d1759efe20753[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Sun May 12 22:56:11 2024 +0200
+
+    Dodanie programu generujacego pasek zdrowia w zaleznosci od zadanych obrazen/ warunek na odebranie zdrowia w zaleznosci od obrazen
+
+[33mcommit e772d30bf66f9d019be01c36653d954e36a2bf36[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Sat May 11 12:59:35 2024 +0200
+
+    Doszliwowanie kodu na poruszanie hitboxem
+
+[33mcommit 6b660c3e124d6930d23fa29752d23673dbeee846[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Fri May 10 23:57:32 2024 +0200
+
+    Dodanie przyciskow do sterowania hitboxem
+
+[33mcommit 8ca8d7eb35227aede23ee1e85dafbbbc832ef23f[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Thu May 9 23:39:45 2024 +0200
+
+    Dodanie reakcji hitboxa na krawedzie pola po ktorym sie porusza
+
+[33mcommit d9d701e6f698440d1fc6a5fedc710e8e89b2a6d2[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Wed May 8 23:45:24 2024 +0200
+
+    Pierwszy kod- ustalenie okna oraz wymiarow hitboxa w dwoch wariantach
+
+[33mcommit 88d5705dc68312c9cf7111291dbe6b5fe47b75d1[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/jzebski_files[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Ignacy Zdziech <164023987+xIgnacY20x@users.noreply.github.com>
+Date:   Tue May 7 12:12:55 2024 +0200
+
+    Testy pracy z biblioteką Tkinter
+    
+    Dokonano pierwszego rozpoznania funkcji oraz możliwości biblioteki dostępnej w języku python o nazwie "Tkinter". Zauważono jej intuicyjność oraz potencjał do późniejszego wykorzystania w dalszej pracy nad projektem
+
+[33mcommit a5c9c1a4cc193dbfb64ca5496aefa3419445d94b[m
+Author: SzymonTyt <szymontytula@gmail.com>
+Date:   Thu Apr 25 18:19:22 2024 +0200
+
+    Wyrzucenie zbednego pliku
+    
+    Kuba nie rób wiecej takich smiesznych zartow
+
+[33mcommit f142dd3c97d270b3f2d44ea368e0fbb80a267221[m
+Author: Adam Frydel <adas.frydel@gmail.com>
+Date:   Thu Apr 25 18:10:32 2024 +0200
+
+    Dodano zmienione pliki
+
+[33mcommit a2f8ed97ecc838db1f515cbbcfec0850b9dc091c[m
+Author: AdamFrydel <164027286+AdamFrydel@users.noreply.github.com>
+Date:   Thu Apr 25 17:52:47 2024 +0200
+
+    Create Spotkanie
+
+[33mcommit cd7992ab9a3cbccc84cc76e5e2d2eb38231ba977[m
+Author: kuba_zebski <164027137+lospapos@users.noreply.github.com>
+Date:   Wed Apr 17 22:23:33 2024 +0200
+
+    Create abcde
+
+[33mcommit faf476d73240e5d74773f10bb54475db7364851d[m
+Author: xIgnacY20x <164023987+xIgnacY20x@users.noreply.github.com>
+Date:   Wed Apr 17 21:52:15 2024 +0200
+
+    test edycji
+
+[33mcommit 93afff31981aa0d1d5174f98738b06b15286f79f[m
+Author: SzymonTyt <167264099+SzymonTyt@users.noreply.github.com>
+Date:   Wed Apr 17 13:08:18 2024 +0200
+
+    Initial commit
