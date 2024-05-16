@@ -1,8 +1,9 @@
-import pasek_zdrowia_HPP.py
+
 import pygame
 import sys
 from pygame.locals import *
-
+sys.path.append('C:\\Users\\adasf\\OneDrive\\Pulpit\\github\\NPGprojekt\\hitbox + pasekZdrowia')
+import pasek_zdrowia_HPP
 pygame.init()
 
 

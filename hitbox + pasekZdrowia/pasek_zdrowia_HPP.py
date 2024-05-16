@@ -48,5 +48,5 @@ class Postac:
 
     def wyswietlanie_informacji_o_wrogu(self):
         print(f"Nazwa postaci: {self.nazwa}")
-        print(f"Kolor postaci: {self.kolor_wroga}")
+        print(f"Kolor postaci: {self.kolor_postaci}")
 
