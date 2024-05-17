@@ -1,6 +1,19 @@
 import pygame
 import sys
+import os
+sys.path.append('C:\\Users\\adasf\\OneDrive\\Pulpit\\github\\NPGprojekt\\hitbox + pasekZdrowia')
+import pasek_zdrowia_HPP
 from pygame.locals import *
+
+class Wrog:
+    def __init__(self, nazwa_wroga, kolor_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga):
+        self.nazwa = nazwa_wroga
+        self.kolor = kolor_wroga
+        self.rect = pygame.Rect(wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga)
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.kolor, self.rect)
+
 
 pygame.init()
 
@@ -13,6 +26,14 @@ def main():
     szerokoscHb, wysokoscHb = map(int, input("Jaka wielkosc ma miec hitbox postaci (szerokosc wysokosc): ").split())
     window = pygame.display.set_mode((800, 500))  # Ustawienie rozmiaru okna
     pygame.display.set_caption('Magiczne przygody kamienia Artura')  # Etykieta okna
+
+    wrogowie = [
+    Wrog("Wrog1", (255, 0, 0), 0, 0, 50, 50),  # Lewy górny róg
+    Wrog("Wrog2", (255, 0, 0), 750, 0, 50, 50),  # Prawy górny róg
+    Wrog("Wrog3", (255, 0, 0), 0, 450, 50, 50),  # Lewy dolny róg
+    Wrog("Wrog4", (255, 0, 0), 750, 450, 50, 50)  # Prawy dolny róg
+]
+
 
     hitbox = hitbox_ustalony_przez_gracza(0, 0, szerokoscHb, wysokoscHb)
     hitbox_speed = 1  # Szybkosc poruszania hitboxa
@@ -51,6 +72,9 @@ def main():
         window.fill("purple")
 
         pygame.draw.rect(window, "red", hitbox)  # Rysowanie hitboxa na ekranie
+        for wrog in wrogowie:
+            wrog.draw(window)
+
 
         pygame.display.update()
 
