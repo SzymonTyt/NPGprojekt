@@ -14,6 +14,16 @@ class Wrog:
     def draw(self, surface):
         pygame.draw.rect(surface, self.kolor, self.rect)
 
+    def move_towards(self, target_rect):
+        if self.rect.x < target_rect.x:
+            self.rect.x += 1
+        elif self.rect.x > target_rect.x:
+            self.rect.x -= 1
+        if self.rect.y < target_rect.y:
+            self.rect.y += 1
+        elif self.rect.y > target_rect.y:
+            self.rect.y -= 1
+
 
 pygame.init()
 
@@ -72,7 +82,9 @@ def main():
         window.fill("purple")
 
         pygame.draw.rect(window, "red", hitbox)  # Rysowanie hitboxa na ekranie
+       
         for wrog in wrogowie:
+            
             wrog.draw(window)
 
 

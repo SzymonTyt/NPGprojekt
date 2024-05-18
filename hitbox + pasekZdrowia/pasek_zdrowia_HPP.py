@@ -19,7 +19,16 @@ class Wrog:
         print(f"Współrzędna y: {self.rect.y}")
         print(f"Szerokość wroga: {self.rect.width}")
         print(f"Wysokość wroga: {self.rect.height}")
-
+        
+    def move_towards(self, target_rect):
+        if self.rect.x < target_rect.x:
+            self.rect.x += 1
+        elif self.rect.x > target_rect.x:
+            self.rect.x -= 1
+        if self.rect.y < target_rect.y:
+            self.rect.y += 1
+        elif self.rect.y > target_rect.y:
+            self.rect.y -= 1
 import pygame
 
 class Wrog:
