@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import time
 sys.path.append('C:\\Users\\adasf\\OneDrive\\Pulpit\\github\\NPGprojekt\\hitbox + pasekZdrowia')
 import pasek_zdrowia_HPP
 from pygame.locals import *
@@ -46,7 +47,9 @@ def main():
 
 
     hitbox = hitbox_ustalony_przez_gracza(0, 0, szerokoscHb, wysokoscHb)
-    hitbox_speed = 1  # Szybkosc poruszania hitboxa
+    hitbox_speed = 5  # Szybkosc poruszania hitboxa
+
+    clock = pygame.time.Clock()
 
     while True:
         for event in pygame.event.get():
@@ -82,13 +85,14 @@ def main():
         window.fill("purple")
 
         pygame.draw.rect(window, "red", hitbox)  # Rysowanie hitboxa na ekranie
-       
+
         for wrog in wrogowie:
-            
+            wrog.move_towards(hitbox)
             wrog.draw(window)
 
 
         pygame.display.update()
+        clock.tick(60)
 
 if __name__ == "__main__":
     main()
