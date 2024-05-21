@@ -1,64 +1,50 @@
-from customtkinter import CTk, CTkButton, CTkSlider, CTkFrame, set_appearance_mode, CTkComboBox, CTkToplevel, CTkLabel
+import pygame
+import sys
+def wypisz(tekst, font, kolor, surf, x, y):
+    tekstobj = font.render(tekst, True, kolor)
+    tekstrect = tekstobj.get_rect()
+    tekstrect.topleft = (x, y)
+    surf.blit(tekstobj, tekstrect)
 
+pygame.init()
 
-def start_game():
-    print("Game started")
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GRAY = (128, 128, 128)
 
+def main_menu():
+    while True:
+        screen.fill(WHITE)
+        wypisz('Menu glowne', font, BLACK, screen, 20, 20)
 
-def quit_game():
-    app.destroy()
+        mx, my = pygame.mouse.get_pos()
 
-def open_settings():
-    def sliding(value):
-        volume_label.configure(text=int(value))
+        button_1 = pygame.Rect(50, 100, 200, 50)
+        button_2 = pygame.Rect(50, 200, 200, 50)
 
-    settings_window = CTkToplevel()
-    settings_window.title("Ustawienia")
-    settings_window.geometry("500x400")
-    settings_window.title("Settings")
-    settings_window.resizable(False, False)
+        if button_1.collidepoint((mx, my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                pygame.quit()
+                sys.exit()
 
-    frame2 = CTkFrame(settings_window)
-    frame2.pack(pady=40)
-    frame2.configure(width=500, height=600)
+        pygame.draw.rect(screen, BLACK, button_1)
+        pygame.draw.rect(screen, BLACK, button_2)
 
-    volume_label = CTkLabel(frame2, text="Głośność", font=("", 14,))
-    volume_label.grid(row=0, column=1, padx=0, pady=8)
+        draw_text('Graj', small_font, WHITE, screen, 100, 110)
+        draw_text('Wyjdz', small_font, WHITE, screen, 100, 210)
 
-    volume = CTkSlider(frame2, from_=0, to=100, orientation="horizontal", fg_color="#4158D0",
-                       command=sliding)
-    volume.grid(row=1, column=1, padx=0, pady=16)
-    volume.set(50)
+        click = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
 
-    difficulty_label = CTkLabel(frame2, text="Poziom trudności", font=("", 14))
-    difficulty_label.grid(row=2, column=1, padx=0, pady=8)
-    difficulty = CTkComboBox(frame2, corner_radius=32, values=["Łatwy", "Średni", "Trudny"])
-    difficulty.grid(row=3, column=1, padx=0, pady=16)
-
-    back_button_label = CTkLabel(frame2, text="Głośność", font=("", 14))
-    back_button_label.grid(row=4, column=1, padx=0, pady=8)
-    back_button = CTkButton(frame2, text="Powrót Do Menu", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0",
-                            command=settings_window.destroy)
-    back_button.grid(row=5, column=1, columnspan=2, pady=16)
-    settings_window.mainloop()
-
-app = CTk()
-app.title("Menu Gry")
-app.geometry("500x400")
-set_appearance_mode("dark")
-app.resizable(False, False)
-
-frame = CTkFrame(app)
-frame.pack(pady=60)
-
-start_button = CTkButton(frame, text="Start", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0", command=start_game)
-start_button.grid(row=0, column=0, padx=50, pady=30)
-
-settings_button = CTkButton(frame, text="Ustawienia", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0", command=open_settings)
-settings_button.grid(row=1, column=0, padx=50, pady=30)
-
-quit_button = CTkButton(frame, text="Wyjście", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0",
-                        command=quit_game)
-quit_button.grid(row=2, column=0, padx=50, pady=30)
-
-app.mainloop()
+        pygame.display.update()
+        clock.tick(144)
