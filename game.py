@@ -450,6 +450,7 @@ def quit_game(): #funkcja po naciśnięcia przycisku "wyjście"
 
 def open_settings(): #funkcja po naciśnięcia przycisku "ustawienia"
     def sliding(value):
+        value = volume.get()#odczytywanie wartości ze slidera głośności
         volume_label.configure(text=int(value))
 
 #ustawienia okna ustawień
