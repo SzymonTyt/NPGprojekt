@@ -1,14 +1,47 @@
-from customtkinter import CTk, CTkButton, CTkSlider, CTkFrame, set_appearance_mode, CTkComboBox, CTkToplevel, CTkLabel
+from customtkinter import  CTkButton, CTkSlider, CTkFrame, CTkComboBox, CTkToplevel, CTkLabel
 import pygame
 import random
-
+import tkinter as tk
+from PIL import Image, ImageTk
 def start_game(): #funkcja po naciśnięcia przycisku "start"
 
+    # pygame setup
     pygame.init()
 
     height = 720
     width = 1280
     screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
+
+    licznik_mrowek = 0
+
+    class Wrog:
+        def __init__(self, kolor_hitboxu, nazwa_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga,
+                     grafika):
+            self.nazwa = nazwa_wroga
+            self.kolor = kolor_hitboxu
+            self.rect = pygame.Rect(wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga)
+            self.rect_hitbox = pygame.Rect(30, 30, szerokosc_wroga / 1.3, wysokosc_wroga / 1.2)
+            self.grafika = grafika
+
+        def create_surface(self):
+            return pygame.image.load(self.grafika)
+
+        def draw(self, surface):
+            pygame.draw.rect(surface, self.kolor, self.rect)
+
+        def hitbox(self, surface):
+            pygame.draw.rect(surface, self.kolor, self.rect_hitbox)
+
+        def move_towards(self, target_rect):
+            if abs(self.rect.x - target_rect.x) < 5 or abs(self.rect.x - target_rect.y) < 5:
+                if self.rect.x < target_rect.x:
+                    self.rect.x += 200
+                elif self.rect.x > target_rect.x:
+                    self.rect.x -= 200
+                if self.rect.y < target_rect.y:
+                    self.rect.y += 200
+                elif self.rect.y > target_rect.y:
+                    self.rect.y -= 200
 
     # informacje o mieczu
     sword_x_size = 70
@@ -41,9 +74,6 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
     bug_x_size = 75
     bug_y_size = 50
 
-    bug = pygame.image.load('animations/ant_move/1.png')
-    bug = pygame.transform.scale(bug, (bug_x_size, bug_y_size))
-
     # losowa początkowa pozycja chrząszcza
     bug_x_rng = random.randint(60, 900)
     bug_y_rng = random.randint(40, 540)
@@ -59,12 +89,24 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
     else:
         bug_y_rand = bug_y_rng + 180
 
+    bug_wrog = Wrog((255, 0, 0), "bug", bug_x_rand, bug_y_rand, bug_x_size, bug_y_size, "animations/ant_move/1.png")
+    bug = bug_wrog.create_surface()
+    bug = pygame.transform.scale(bug, (bug_x_size, bug_y_size))
+
     # pozycja gracza
     player_pos = pygame.Vector2((screen.get_width() / 2) - stone_x_size / 2,
                                 (screen.get_height() / 2) - stone_y_size / 2)
 
     # pozycja chrząszcza
     bug_pos = pygame.Vector2(bug_x_rand, bug_y_rand)
+
+    """
+    # informacje o pocisku
+    bullet_r = 5
+    bullet_pos = pygame.Vector2(bug_pos.x, bug_pos.y)
+
+    bullet = pygame.Rect(bullet_pos.x, bullet_pos.y, 2 * bullet_r, 2*bullet_r)
+    """
 
     # zegar
     clock = pygame.time.Clock()
@@ -135,32 +177,6 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
     iter_am = 1
     iter_ps = 1
 
-    class Wrog:
-        def __init__(self, nazwa_wroga, kolor_wroga, wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga,
-                     predkosc):
-            self.nazwa = nazwa_wroga
-            self.kolor = kolor_wroga
-            self.rect_1 = pygame.Rect(0, 0, szerokosc_wroga, wysokosc_wroga)
-            self.rect = pygame.Rect(wspolrzedna_x, wspolrzedna_y, szerokosc_wroga, wysokosc_wroga)
-            self.predkosc = predkosc
-
-        def draw(self, surface):
-            pygame.draw.rect(surface, self.kolor, self.rect)
-
-        def draw_1(self, surface):
-            pygame.draw.rect(surface, self.kolor, self.rect_1)
-
-        def move_towards(self, target_rect):
-            if abs(self.rect.x - target_rect.x) < 5 or abs(self.rect.x - target_rect.y) < 5:
-                if self.rect.x < target_rect.x:
-                    self.rect.x += self.predkosc
-                elif self.rect.x > target_rect.x:
-                    self.rect.x -= self.predkosc
-                if self.rect.y < target_rect.y:
-                    self.rect.y += self.predkosc * 0.6
-                elif self.rect.y > target_rect.y:
-                    self.rect.y -= self.predkosc * 0.6
-
     while program_running:
         if game_starting:
             if iter_ps < len(player_spawn):
@@ -205,7 +221,7 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                                  0.8 * stone_x_size, 0.9 * stone_y_size)
         rect_bug = pygame.Rect(bug_pos.x + 0.45 * bug_x_size, bug_pos.y + 0.6 * bug_y_size, 0.7 * bug_x_size,
                                0.8 * bug_y_size)
-        # kwadrat = Wrog("kwadrat", (255, 255, 255), bug_x_rand, bug_y_rand, bug_x_size, bug_y_size, 100)
+        bug_hitbox = bug_wrog.rect
 
         # paski zdrowia
         rect_stone_hp = pygame.Rect(player_pos.x, player_pos.y - 20, stone_hp, 10)
@@ -220,10 +236,10 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
             movement_up = False
         if player_pos.y >= height - stone_y_size:
             movement_down = False
-        if player_pos.x > 0 and player_pos.x < width - stone_x_size:
+        if 0 < player_pos.x < width - stone_x_size:
             movement_right = True
             movement_left = True
-        if player_pos.y > 0 and player_pos.y < height - stone_y_size:
+        if 0 < player_pos.y < height - stone_y_size:
             movement_up = True
             movement_down = True
 
@@ -262,12 +278,12 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
         if mouse:
             x, y = pygame.mouse.get_pos()
 
-            if x < player_pos.x:
+            if x < player_pos.x + stone_x_size / 2:
                 left = True
                 last_left = True
                 right = False
                 last_right = False
-            elif x > player_pos.x:
+            elif x > player_pos.x + stone_x_size / 2:
                 left = False
                 last_left = False
                 right = True
@@ -291,11 +307,9 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                     bug_left = False
                     bug_right = True
             else:
-                bug_movement = False
+                bug_movement = True
                 bug_left = False
                 bug_right = False
-                bug_up = False
-                bug_down = False
 
             if abs(bug_pos.y - player_pos.y) > 100 * dt:
                 bug_movement = True
@@ -308,9 +322,7 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                     bug_up = False
                     bug_down = True
             else:
-                bug_movement = False
-                bug_left = False
-                bug_right = False
+                bug_movement = True
                 bug_up = False
                 bug_down = False
         else:
@@ -325,11 +337,9 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                     bug_left = False
                     bug_right = True
             else:
-                bug_movement = False
+                bug_movement = True
                 bug_left = False
                 bug_right = False
-                bug_up = False
-                bug_down = False
 
             if bug_pos.y != player_pos.y:
                 bug_movement = True
@@ -342,11 +352,12 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                     bug_up = False
                     bug_down = True
             else:
-                bug_movement = False
-                bug_left = False
-                bug_right = False
+                bug_movement = True
                 bug_up = False
                 bug_down = False
+
+        if abs(bug_pos.x - player_pos.x) < 25 and abs(bug_pos.y - player_pos.y) < 25:
+            bug_movement = False
 
         if bug_movement:
             bug = ant_move[iter_am]
@@ -354,9 +365,6 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
 
         if iter_am >= len(ant_move):
             iter_am = 1
-
-        # ruch hitboxa
-        # kwadrat.move_towards(player_pos)
 
         # zwiększenie wartości iteratora za każdym razem, gdy trwa atak mieczem (pozwalające kontynuować animację)
         if hitting:
@@ -374,7 +382,7 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
             iter_pm = 1
 
         # animacja
-        sword = sword_sprite[iter]
+        """"  sword = sword_sprite[iter]
 
         # zmiana rozmiaru miecza w trakcie animacji
         sword = pygame.transform.scale(sword, (sword_x_size, sword_y_size))
@@ -382,17 +390,17 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
         # wyświetlenie miecza, kamienia i robaka
         if left and last_left:
             sword = pygame.transform.flip(sword, True, False)
-            screen.blit(sword, (player_pos.x - sword_x_size + 30, player_pos.y - stone_y_size / 2))
+            screen.blit(sword, (player_pos.x - sword_x_size + 30, player_pos.y + stone_y_size / 4))
         elif right and last_right:
-            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y - stone_y_size / 2))
+            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y + stone_y_size / 4))
         elif last_right:
-            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y - stone_y_size / 2))
+            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y + stone_y_size / 4))
         elif last_left:
             sword = pygame.transform.flip(sword, True, False)
-            screen.blit(sword, (player_pos.x - sword_x_size + 30, player_pos.y - stone_y_size / 2))
+            screen.blit(sword, (player_pos.x - sword_x_size + 30, player_pos.y + stone_y_size / 4))
         else:
-            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y - stone_y_size / 2))
-
+            screen.blit(sword, (player_pos.x + stone_x_size, player_pos.y + stone_y_size / 4))
+"""
         if left:
             stone = pygame.transform.flip(stone, True, False)
             screen.blit(stone, (player_pos.x, player_pos.y))
@@ -408,11 +416,11 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
         pygame.draw.rect(screen, (0, 128, 0), rect_stone_hp)
         pygame.draw.rect(screen, (255, 0, 0, 0), rect_bug_hp)
 
-        # kwadrat.draw_1(bug)
+        """
+        if bug_attack:
+            pygame.draw.circle(screen, (255, 0, 0), (bullet_pos.x + bullet_r, bullet_pos.y + bullet_r), bullet_r)
+        """
 
-        # kolizja obiektów
-        # - gdy zderzy się miecz i przeciwnik oraz następuje atak mieczem, zdrowie przeciwnika spada o 10
-        # - gdy zetkną się kamień i przeciwnik, zdrowie kamienia spada o ustaloną wartość z każdą sekundą kolizji
         if pygame.Rect.colliderect(rect_sword, rect_bug) and one_hit_stone:
             bug_hp -= 10
             one_hit_stone = False
@@ -422,18 +430,40 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
         # zatrzymanie gry, gdy zdrowie kamienia lub przeciwnika spadnie do zera
         # - gdy kamień zginie, wyświetla się informacja o zwycięstwie (w konsoli)
         # - gdy zginie przeciwnik, wyświetla się informacja o porażce (również w konsoli)
+
         if bug_hp <= 0:
+            licznik_mrowek += 1
+            pygame.time.wait(80)
+            bug_x_rng = random.randint(0, width - 320)
+            bug_y_rng = random.randint(0, height - 180)
+            if bug_x_rng <= player_pos.x - 160:
+                bug_pos.x = bug_x_rng
+            else:
+                bug_pos.x = bug_x_rng + 320
+
+            if bug_y_rng <= player_pos.y - 90:
+                bug_pos.y = bug_y_rng
+            else:
+                bug_pos.y = bug_y_rng + 180
+            bug = bug_wrog.create_surface()
+            bug = pygame.transform.scale(bug, (bug_x_size, bug_y_size))
+            bug_hp = 100
+
+        if licznik_mrowek >= 5:
             print("Congratulations. You won")
             program_running = False
+            pygame.quit()
+
         elif stone_hp <= 0:
             print("Game over")
             program_running = False
+            pygame.quit()
         """
         #poniżej zakomentowane metody pozwalające pokolorować hitboxy poszczególnych obiektów, w celu sprawdzenia sposobu ich zachowania się
 
         pygame.draw.rect(screen, (0, 0, 0), rect_stone)
-        pygame.draw.rect(screen, (0, 0, 255), rect_sword)
-        pygame.draw.rect(screen, (0, 255, 0), rect_bug)"""
+        pygame.draw.rect(screen, (0, 0, 255), rect_sword)"""
+        # pygame.draw.rect(screen, (0, 255, 0), rect_bug)
 
         # update wyświetlanych na ekranie obiektów przy każdej iteracji pętli
         pygame.display.update()
@@ -450,7 +480,9 @@ def quit_game(): #funkcja po naciśnięcia przycisku "wyjście"
 
 def open_settings(): #funkcja po naciśnięcia przycisku "ustawienia"
     def sliding(value):
+        value = volume.get()#odczytywanie wartości ze slidera głośności
         volume_label.configure(text=int(value))
+
 
 #ustawienia okna ustawień
     settings_window = CTkToplevel()
@@ -471,7 +503,7 @@ def open_settings(): #funkcja po naciśnięcia przycisku "ustawienia"
     volume.grid(row=1, column=1, padx=0, pady=16)
     volume.set(50)
 
-#ustawienia wyboru poziomu trudności    
+#ustawienia wyboru poziomu trudności
     difficulty_label = CTkLabel(frame2, text="Poziom trudności", font=("", 14))
     difficulty_label.grid(row=2, column=1, padx=0, pady=8)
     difficulty = CTkComboBox(frame2, corner_radius=32, values=["Łatwy", "Średni", "Trudny"])
@@ -484,29 +516,91 @@ def open_settings(): #funkcja po naciśnięcia przycisku "ustawienia"
                             command=settings_window.destroy)
     back_button.grid(row=5, column=1, columnspan=2, pady=16)
     settings_window.mainloop()
-
+def open_stats():
+    print("stats opened!")
 #ustawienia okna menu
-app = CTk()
+
+
+
+# Inicjalizacja aplikacji
+app = tk.Tk()
 app.title("Menu Gry")
-app.geometry("500x400")
-set_appearance_mode("dark")
+app.attributes('-fullscreen', True)
 app.resizable(False, False)
 
-frame = CTkFrame(app)
-frame.pack(pady=60)
+# Funkcja do skalowania obrazów
+def resize_image(image, width, height):
+    return ImageTk.PhotoImage(image.resize((width, height), Image.Resampling.LANCZOS))
 
-#przycisk start
-start_button = CTkButton(frame, text="Start", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0", command=start_game)
-start_button.grid(row=0, column=0, padx=50, pady=30)
+# Wczytywanie i skalowanie obrazka tła
+screen_width = app.winfo_screenwidth()
+screen_height = app.winfo_screenheight()
+background_image = Image.open("background_menu.png")  # Updated to use the new background image
+background_photo = resize_image(background_image, screen_width, screen_height)
 
-#przycisk ustawień
-settings_button = CTkButton(frame, text="Ustawienia", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0", command=open_settings)
-settings_button.grid(row=1, column=0, padx=50, pady=30)
+# Tworzenie canvasu i umieszczanie tła
+canvas = tk.Canvas(app, width=screen_width, height=screen_height)
+canvas.pack(fill="both", expand=True)
+canvas.create_image(0, 0, image=background_photo, anchor="nw")
 
-#przycisk wyjścia
-quit_button = CTkButton(frame, text="Wyjście", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0",
-                        command=quit_game)
-quit_button.grid(row=2, column=0, padx=50, pady=30)
+# Wczytywanie obrazków dla przycisków i ich skalowanie
+button_width = int(screen_width * 0.2)
+button_height = int(screen_height * 0.1)
 
+button_play_image = resize_image(Image.open("button_play.png"), button_width, button_height)
+button_play_hovered_image = resize_image(Image.open("button_play_hovered.png"), button_width, button_height)
+button_settings_image = resize_image(Image.open("button_settings.png"), button_width, button_height)
+button_settings_hovered_image = resize_image(Image.open("button_settings_hovered.png"), button_width, button_height)
+button_stats_image = resize_image(Image.open("button_stats.png"), button_width, button_height)
+button_stats_hovered_image = resize_image(Image.open("button_stats_hovered.png"), button_width, button_height)
+button_quit_image = resize_image(Image.open("button_quit.png"), button_width, button_height)
+button_quit_hovered_image = resize_image(Image.open("button_quit_hovered.png"), button_width, button_height)
+
+def on_enter_start(e):
+    start_button.config(image=button_play_hovered_image)
+
+def on_leave_start(e):
+    start_button.config(image=button_play_image)
+
+def on_enter_settings(e):
+    settings_button.config(image=button_settings_hovered_image)
+
+def on_leave_settings(e):
+    settings_button.config(image=button_settings_image)
+
+def on_enter_stats(e):
+    stats_button.config(image=button_stats_hovered_image)
+
+def on_leave_stats(e):
+    stats_button.config(image=button_stats_image)
+def on_enter_quit(e):
+    quit_button.config(image=button_quit_hovered_image)
+
+def on_leave_quit(e):
+    quit_button.config(image=button_quit_image)
+
+# Tworzenie przycisków
+start_button = tk.Button(app, image=button_play_image, command=start_game, borderwidth=0)
+start_button.bind("<Enter>", on_enter_start)
+start_button.bind("<Leave>", on_leave_start)
+canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.5), window=start_button)  # Position adjusted
+
+settings_button = tk.Button(app, image=button_settings_image, command=open_settings, borderwidth=0)
+settings_button.bind("<Enter>", on_enter_settings)
+settings_button.bind("<Leave>", on_leave_settings)
+canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.62), window=settings_button)  # Position adjusted
+
+stats_button = tk.Button(app, image=button_stats_image, command=open_stats, borderwidth=0)
+stats_button.bind("<Enter>", on_enter_stats)
+stats_button.bind("<Leave>", on_leave_stats)
+canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.74), window=stats_button)  # Position adjusted
+
+quit_button = tk.Button(app, image=button_quit_image, command=quit_game, borderwidth=0)
+quit_button.bind("<Enter>", on_enter_quit)
+quit_button.bind("<Leave>", on_leave_quit)
+canvas.create_window(int(screen_width * 0.2), int(screen_height * 0.85),window=quit_button)  # Position adjusted
 
 app.mainloop()
+
+
+
