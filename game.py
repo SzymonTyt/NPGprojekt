@@ -535,7 +535,7 @@ def resize_image(image, width, height):
 # Wczytywanie i skalowanie obrazka tła
 screen_width = app.winfo_screenwidth()
 screen_height = app.winfo_screenheight()
-background_image = Image.open("background_menu.png")  # Updated to use the new background image
+background_image = Image.open("FIXEDPNGS\Background_menu.png")  # Updated to use the new background image
 background_photo = resize_image(background_image, screen_width, screen_height)
 
 # Tworzenie canvasu i umieszczanie tła
@@ -544,17 +544,14 @@ canvas.pack(fill="both", expand=True)
 canvas.create_image(0, 0, image=background_photo, anchor="nw")
 
 # Wczytywanie obrazków dla przycisków i ich skalowanie
-button_width = int(screen_width * 0.2)
-button_height = int(screen_height * 0.1)
-
-button_play_image = resize_image(Image.open("button_play.png"), button_width, button_height)
-button_play_hovered_image = resize_image(Image.open("button_play_hovered.png"), button_width, button_height)
-button_settings_image = resize_image(Image.open("button_settings.png"), button_width, button_height)
-button_settings_hovered_image = resize_image(Image.open("button_settings_hovered.png"), button_width, button_height)
-button_stats_image = resize_image(Image.open("button_stats.png"), button_width, button_height)
-button_stats_hovered_image = resize_image(Image.open("button_stats_hovered.png"), button_width, button_height)
-button_quit_image = resize_image(Image.open("button_quit.png"), button_width, button_height)
-button_quit_hovered_image = resize_image(Image.open("button_quit_hovered.png"), button_width, button_height)
+button_play_image = resize_image(Image.open("FIXEDPNGS\PLAY.PNG"), 450, 160)
+button_play_hovered_image = resize_image(Image.open("FIXEDPNGS\PLAYHOVERED.PNG"), 450, 160)
+button_settings_image = resize_image(Image.open("FIXEDPNGS\SETTINGS.png"), 497, 150)
+button_settings_hovered_image = resize_image(Image.open("FIXEDPNGS\SETTINGS HOVERED.png"), 497, 150)
+button_stats_image = resize_image(Image.open("FIXEDPNGS\STATS.png"), 450, 160)
+button_stats_hovered_image = resize_image(Image.open("FIXEDPNGS\STATSHOVERED.png"), 450, 160)
+button_quit_image = resize_image(Image.open("FIXEDPNGS\QUIT.png"), 160, 80)
+button_quit_hovered_image = resize_image(Image.open("FIXEDPNGS\HOVEREDQUIT.png"), 160, 80)
 
 def on_enter_start(e):
     start_button.config(image=button_play_hovered_image)
@@ -580,25 +577,26 @@ def on_leave_quit(e):
     quit_button.config(image=button_quit_image)
 
 # Tworzenie przycisków
-start_button = tk.Button(app, image=button_play_image, command=start_game, borderwidth=0)
+start_button = tk.Button(app, image=button_play_image, command=start_game, borderwidth=0, highlightthickness=0)
 start_button.bind("<Enter>", on_enter_start)
 start_button.bind("<Leave>", on_leave_start)
-canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.5), window=start_button)  # Position adjusted
+canvas.create_window(int(screen_width * 0.63), int(screen_height * 0.5), window=start_button)  # Ustawianie pozycji
 
-settings_button = tk.Button(app, image=button_settings_image, command=open_settings, borderwidth=0)
+
+settings_button = tk.Button(app, image=button_settings_image, command=open_settings, borderwidth=0,highlightthickness=0)
 settings_button.bind("<Enter>", on_enter_settings)
 settings_button.bind("<Leave>", on_leave_settings)
-canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.62), window=settings_button)  # Position adjusted
+canvas.create_window(int(screen_width * 0.676), int(screen_height * 0.63), window=settings_button)  # Ustawianie pozycji
 
-stats_button = tk.Button(app, image=button_stats_image, command=open_stats, borderwidth=0)
+stats_button = tk.Button(app, image=button_stats_image, command=open_stats, borderwidth=0,highlightthickness=0)
 stats_button.bind("<Enter>", on_enter_stats)
 stats_button.bind("<Leave>", on_leave_stats)
-canvas.create_window(int(screen_width * 0.7), int(screen_height * 0.74), window=stats_button)  # Position adjusted
+canvas.create_window(int(screen_width * 0.625), int(screen_height * 0.80), window=stats_button)  # Ustawianie pozycji
 
-quit_button = tk.Button(app, image=button_quit_image, command=quit_game, borderwidth=0)
+quit_button = tk.Button(app, image=button_quit_image, command=quit_game, borderwidth=0, highlightthickness=0)
 quit_button.bind("<Enter>", on_enter_quit)
 quit_button.bind("<Leave>", on_leave_quit)
-canvas.create_window(int(screen_width * 0.2), int(screen_height * 0.85),window=quit_button)  # Position adjusted
+canvas.create_window(int(screen_width * 0.18), int(screen_height * 0.83), window=quit_button)  # Ustawianie pozycji
 
 app.mainloop()
 
