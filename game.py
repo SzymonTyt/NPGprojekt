@@ -110,6 +110,7 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
 
     # zegar
     clock = pygame.time.Clock()
+    paused = False
     dt = 0
 
     # iterator przechodzący po kontenerze przechowującym kolejne pozycje miecza - umożliwia zajście animacji
@@ -193,7 +194,10 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                 program_running = False
                 pygame.quit()
                 quit()
-
+            #wywołanie funkcji pauzy
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pause()
             # ustawienie funkcji logicznych odpowiedzialnych za atak mieczem na True pod wpływem wciśniętej spacji
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -473,7 +477,33 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
 
         # zmienna pomocnicza niezbędna przy mechanice sterowania klawiszami
         dt = clock.tick(60) / 1000
+        #funckja pauzy
+        def pause():
+            paused = True
+            #tworzenie okna pauzy
+            pause_window = tk.Tk()
+            pause_window.title("Pauza")
+            pause_window.geometry("200x200")
 
+            label = tk.Label(pause_window, text="Gra jest wstrzymana.")
+            label.pack(pady=10)
+
+            button = tk.Button(pause_window, text="Wznów", command=lambda: resume_game(pause_window))
+            button.pack(pady=10)
+            button = tk.Button(pause_window, text="Powrót do menu", command=lambda: exit_game(pause_window))
+            button.pack(pady=20)
+
+            pause_window.mainloop()
+        #funckja wznawiania gry (do poprawy)
+        def resume_game(window):
+            global paused
+            paused = False
+            window.destroy()
+
+        def exit_game(window):
+            pygame.quit()
+            program_running = False
+            window.destroy()
 
 def quit_game(): #funkcja po naciśnięcia przycisku "wyjście"
     app.destroy()
