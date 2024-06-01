@@ -1,2 +1,1 @@
-# NPGprojekt
-lorem ipsum test edycji
+Pojawił się ogólny problem wynikający najprawdopodbniej z korzystania na raz z bibliotek tkinter i pygame, polegający na złej kolejności wyskakiwania okien. Widać go zarówno przy próbie przejścia do ustawień z menu, jak i podczas próby naciśnięcia jakiegokolwiek przycisku podczas pauzowania gry. 
