@@ -64,3 +64,33 @@ if mouse:
         last_left = False
         right = False
         last_right = False
+
+
+
+
+
+
+
+    #dodanie poniżej fragmentu gdzie pojawia się dźwięk gdy postać uderzy w ścianę
+if player_pos.x <= 0:
+        play_music(dzwiek_uderzania_o_sciane)
+
+        movement_left = False
+
+    if player_pos.x >= width - stone_x_size:
+        play_music(dzwiek_uderzania_o_sciane)
+        movement_right = False
+    if player_pos.y <= 0:
+        play_music(dzwiek_uderzania_o_sciane)
+        movement_up = False
+    if player_pos.y >= height - stone_y_size:
+        play_music(dzwiek_uderzania_o_sciane)
+        movement_down = False
+    if player_pos.x > 0 and player_pos.x < width - stone_x_size:
+        play_music(dzwiek_uderzania_o_sciane)
+        movement_right = True
+        movement_left = True
+    if player_pos.y > 0 and player_pos.y < height - stone_y_size:
+        play_music(dzwiek_uderzania_o_sciane)
+        movement_up = True
+        movement_down = True
