@@ -1,43 +1,48 @@
-from customtkinter import  CTkButton, CTkSlider, CTkFrame, CTkComboBox, CTkToplevel, CTkLabel
 import pygame
+import sys
+from pygame.locals import *
 import random
-import tkinter as tk
-from PIL import Image, ImageTk
-def start_game(): #funkcja po naciśnięcia przycisku "start"
-    # funckja pauzy
-    def pause():
-        paused = True
-        # tworzenie okna pauzy
-        pause_window = tk.Tk()
-        pause_window.title("Pauza")
-        pause_window.geometry("200x200")
+# Inicjalizacja Pygame
+pygame.init()
 
-        label = tk.Label(pause_window, text="Gra jest wstrzymana.")
-        label.pack(pady=10)
+# Ustawienia ekranu
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Menu Gry")
 
-        button = tk.Button(pause_window, text="Wznów", command=lambda: resume_game(pause_window))
-        button.pack(pady=10)
-        button = tk.Button(pause_window, text="Powrót do menu", command=lambda: exit_game(pause_window))
-        button.pack(pady=20)
+# Wczytywanie obrazów
+background_image = pygame.image.load("FIXEDPNGS/Background_menu.png")
+background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
 
-        pause_window.mainloop()
+button_play_image = pygame.image.load("FIXEDPNGS/PLAY.PNG")
+button_play_hovered_image = pygame.image.load("FIXEDPNGS/PLAYHOVERED.PNG")
+button_settings_image = pygame.image.load("FIXEDPNGS/SETTINGS.png")
+button_settings_hovered_image = pygame.image.load("FIXEDPNGS/SETTINGS HOVERED.png")
+button_stats_image = pygame.image.load("FIXEDPNGS/STATS.png")
+button_stats_hovered_image = pygame.image.load("FIXEDPNGS/STATSHOVERED.png")
+button_quit_image = pygame.image.load("FIXEDPNGS/QUIT.png")
+button_quit_hovered_image = pygame.image.load("FIXEDPNGS/HOVEREDQUIT.png")
 
-    # funckja wznawiania gry (do poprawy)
-    def resume_game(window):
-        global paused
-        paused = False
-        window.destroy()
+#kolory
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (200, 200, 200)
+BLUE = (65, 88, 208)
+HOVER_COLOR = (200, 50, 192)
 
-    def exit_game(window):
-        pygame.quit()
-        program_running = False
-        window.destroy()
+#czcionka
+font = pygame.font.Font(None, 36)
+
+# Funkcje przycisków
+def start_game():
+
     # pygame setup
     pygame.init()
 
     height = 720
     width = 1280
-    screen = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 
     licznik_mrowek = 0
 
@@ -221,10 +226,6 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
                 program_running = False
                 pygame.quit()
                 quit()
-            #wywołanie funkcji pauzy
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pause()
             # ustawienie funkcji logicznych odpowiedzialnych za atak mieczem na True pod wpływem wciśniętej spacji
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -506,130 +507,104 @@ def start_game(): #funkcja po naciśnięcia przycisku "start"
         dt = clock.tick(60) / 1000
 
 
-def quit_game(): #funkcja po naciśnięcia przycisku "wyjście"
-    app.destroy()
-
-def open_settings(): #funkcja po naciśnięcia przycisku "ustawienia"
-    def sliding(value):
-        value = volume.get()#odczytywanie wartości ze slidera głośności
-        volume_label.configure(text=int(value))
+def quit_game():
+    pygame.quit()
+    sys.exit()
 
 
-#ustawienia okna ustawień
-    settings_window = CTkToplevel()
-    settings_window.title("Ustawienia")
-    settings_window.geometry("500x400")
-    settings_window.title("Settings")
-    settings_window.resizable(False, False)
 
-    frame2 = CTkFrame(settings_window)
-    frame2.pack(pady=40)
-    frame2.configure(width=500, height=600)
+def back_to_menu():
+    global settings_running
+    settings_running = False
 
-#ustawienia paska głośności
-    volume_label = CTkLabel(frame2, text="Głośność", font=("", 14,))
-    volume_label.grid(row=0, column=1, padx=0, pady=8)
-    volume = CTkSlider(frame2, from_=0, to=100, orientation="horizontal", fg_color="#4158D0",
-                       command=sliding)
-    volume.grid(row=1, column=1, padx=0, pady=16)
-    volume.set(50)
 
-#ustawienia wyboru poziomu trudności
-    difficulty_label = CTkLabel(frame2, text="Poziom trudności", font=("", 14))
-    difficulty_label.grid(row=2, column=1, padx=0, pady=8)
-    difficulty = CTkComboBox(frame2, corner_radius=32, values=["Łatwy", "Średni", "Trudny"])
-    difficulty.grid(row=3, column=1, padx=0, pady=16)
+def open_settings():
+    global settings_running
+    settings_running = True
+    volume = 50
 
-#ustawienia przycisku powrotu do menu
-    back_button_label = CTkLabel(frame2, text="Głośność", font=("", 14))
-    back_button_label.grid(row=4, column=1, padx=0, pady=8)
-    back_button = CTkButton(frame2, text="Powrót Do Menu", corner_radius=32, fg_color="#4158D0", hover_color="#C850C0",
-                            command=settings_window.destroy)
-    back_button.grid(row=5, column=1, columnspan=2, pady=16)
-    settings_window.mainloop()
+    while settings_running:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    settings_running = False
+            elif event.type == MOUSEBUTTONDOWN:
+                if volume_rect.collidepoint(event.pos):
+                    volume = (event.pos[0] - volume_rect.x) / volume_rect.width * 100
+
+        screen.fill(GRAY)
+
+        # Rysowanie paska głośności
+        volume_rect = pygame.Rect(100, 100, 300, 40)
+        pygame.draw.rect(screen, BLUE, volume_rect)
+        handle_rect = pygame.Rect(volume_rect.x + volume * (volume_rect.width / 100) - 10, volume_rect.y, 20, 40)
+        pygame.draw.rect(screen, HOVER_COLOR if handle_rect.collidepoint(pygame.mouse.get_pos()) else BLACK,
+                         handle_rect)
+        volume_label = font.render(f"Głośność: {int(volume)}", True, BLACK)
+        screen.blit(volume_label, (volume_rect.x, volume_rect.y - 40))
+
+        # Przycisk powrotu do menu
+        back_button_rect = pygame.Rect(100, 300, 200, 50)
+        draw_button("Powrót do menu", back_button_rect, BLUE, HOVER_COLOR, back_to_menu)
+
+        pygame.display.flip()
+
+
+# Funkcja do rysowania przycisków
+def draw_button(text, rect, color, hover_color, action=None):
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_click = pygame.mouse.get_pressed()
+    if rect.collidepoint(mouse_pos):
+        pygame.draw.rect(screen, hover_color, rect)
+        if mouse_click[0] and action:
+            action()
+    else:
+        pygame.draw.rect(screen, color, rect)
+    text_surf = font.render(text, True, WHITE)
+    text_rect = text_surf.get_rect(center=rect.center)
+    screen.blit(text_surf, text_rect)
+
+
 def open_stats():
-    print("stats opened!")
-#ustawienia okna menu
+    print("Statystyki otwarte!")
 
 
+# Główna pętla gry
+running = True
+while running:
+    screen.blit(background_image, (0, 0))
 
-# Inicjalizacja aplikacji
-app = tk.Tk()
-app.title("Menu Gry")
-app.attributes('-fullscreen', True)
-app.resizable(False, False)
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_click = pygame.mouse.get_pressed()
 
-# Funkcja do skalowania obrazów
-def resize_image(image, width, height):
-    return ImageTk.PhotoImage(image.resize((width, height), Image.Resampling.LANCZOS))
+    # Pozycje i stany przycisków
+    buttons = [
+        (button_play_image, button_play_hovered_image, (630, 360), start_game),
+        (button_settings_image, button_settings_hovered_image, (676, 460), open_settings),
+        (button_stats_image, button_stats_hovered_image, (625, 560), open_stats),
+        (button_quit_image, button_quit_hovered_image, (180, 640), quit_game),
+    ]
 
-# Wczytywanie i skalowanie obrazka tła
-screen_width = app.winfo_screenwidth()
-screen_height = app.winfo_screenheight()
-background_image = Image.open("FIXEDPNGS\Background_menu.png")  # Updated to use the new background image
-background_photo = resize_image(background_image, screen_width, screen_height)
+    for button, button_hovered, pos, action in buttons:
+        rect = button.get_rect(center=pos)
+        if rect.collidepoint(mouse_pos):
+            screen.blit(button_hovered, rect.topleft)
+            if mouse_click[0]:
+                action()
+        else:
+            screen.blit(button, rect.topleft)
 
-# Tworzenie canvasu i umieszczanie tła
-canvas = tk.Canvas(app, width=screen_width, height=screen_height)
-canvas.pack(fill="both", expand=True)
-canvas.create_image(0, 0, image=background_photo, anchor="nw")
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            running = False
+        elif event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                running = False
 
-# Wczytywanie obrazków dla przycisków i ich skalowanie
-button_play_image = resize_image(Image.open("FIXEDPNGS\PLAY.PNG"), 450, 160)
-button_play_hovered_image = resize_image(Image.open("FIXEDPNGS\PLAYHOVERED.PNG"), 450, 160)
-button_settings_image = resize_image(Image.open("FIXEDPNGS\SETTINGS.png"), 497, 150)
-button_settings_hovered_image = resize_image(Image.open("FIXEDPNGS\SETTINGS HOVERED.png"), 497, 150)
-button_stats_image = resize_image(Image.open("FIXEDPNGS\STATS.png"), 450, 160)
-button_stats_hovered_image = resize_image(Image.open("FIXEDPNGS\STATSHOVERED.png"), 450, 160)
-button_quit_image = resize_image(Image.open("FIXEDPNGS\QUIT.png"), 160, 80)
-button_quit_hovered_image = resize_image(Image.open("FIXEDPNGS\HOVEREDQUIT.png"), 160, 80)
+    pygame.display.flip()
 
-def on_enter_start(e):
-    start_button.config(image=button_play_hovered_image)
-
-def on_leave_start(e):
-    start_button.config(image=button_play_image)
-
-def on_enter_settings(e):
-    settings_button.config(image=button_settings_hovered_image)
-
-def on_leave_settings(e):
-    settings_button.config(image=button_settings_image)
-
-def on_enter_stats(e):
-    stats_button.config(image=button_stats_hovered_image)
-
-def on_leave_stats(e):
-    stats_button.config(image=button_stats_image)
-def on_enter_quit(e):
-    quit_button.config(image=button_quit_hovered_image)
-
-def on_leave_quit(e):
-    quit_button.config(image=button_quit_image)
-
-# Tworzenie przycisków
-start_button = tk.Button(app, image=button_play_image, command=start_game, borderwidth=0, highlightthickness=0)
-start_button.bind("<Enter>", on_enter_start)
-start_button.bind("<Leave>", on_leave_start)
-canvas.create_window(int(screen_width * 0.63), int(screen_height * 0.5), window=start_button)  # Ustawianie pozycji
-
-
-settings_button = tk.Button(app, image=button_settings_image, command=open_settings, borderwidth=0,highlightthickness=0)
-settings_button.bind("<Enter>", on_enter_settings)
-settings_button.bind("<Leave>", on_leave_settings)
-canvas.create_window(int(screen_width * 0.676), int(screen_height * 0.63), window=settings_button)  # Ustawianie pozycji
-
-stats_button = tk.Button(app, image=button_stats_image, command=open_stats, borderwidth=0,highlightthickness=0)
-stats_button.bind("<Enter>", on_enter_stats)
-stats_button.bind("<Leave>", on_leave_stats)
-canvas.create_window(int(screen_width * 0.625), int(screen_height * 0.80), window=stats_button)  # Ustawianie pozycji
-
-quit_button = tk.Button(app, image=button_quit_image, command=quit_game, borderwidth=0, highlightthickness=0)
-quit_button.bind("<Enter>", on_enter_quit)
-quit_button.bind("<Leave>", on_leave_quit)
-canvas.create_window(int(screen_width * 0.18), int(screen_height * 0.83), window=quit_button)  # Ustawianie pozycji
-
-app.mainloop()
-
-
-
+pygame.quit()
+sys.exit()
