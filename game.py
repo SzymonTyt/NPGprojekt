@@ -2,13 +2,13 @@ import pygame
 import sys
 from pygame.locals import *
 import random
+
 # Inicjalizacja Pygame
 pygame.init()
 
 # Ustawienia ekranu
-screen_width = 1280
-screen_height = 720
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen_width, screen_height = screen.get_size()
 pygame.display.set_caption("Menu Gry")
 
 # Wczytywanie obrazów
@@ -24,19 +24,18 @@ button_stats_hovered_image = pygame.image.load("FIXEDPNGS/STATSHOVERED.png")
 button_quit_image = pygame.image.load("FIXEDPNGS/QUIT.png")
 button_quit_hovered_image = pygame.image.load("FIXEDPNGS/HOVEREDQUIT.png")
 
-#kolory
+# Kolory
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 BLUE = (65, 88, 208)
 HOVER_COLOR = (200, 50, 192)
 
-#czcionka
+# Czcionka
 font = pygame.font.Font(None, 36)
 
 # Funkcje przycisków
 def start_game():
-
     # pygame setup
     pygame.init()
 
@@ -511,12 +510,9 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
-
-
 def back_to_menu():
     global settings_running
     settings_running = False
-
 
 def open_settings():
     global settings_running
@@ -541,8 +537,7 @@ def open_settings():
         volume_rect = pygame.Rect(100, 100, 300, 40)
         pygame.draw.rect(screen, BLUE, volume_rect)
         handle_rect = pygame.Rect(volume_rect.x + volume * (volume_rect.width / 100) - 10, volume_rect.y, 20, 40)
-        pygame.draw.rect(screen, HOVER_COLOR if handle_rect.collidepoint(pygame.mouse.get_pos()) else BLACK,
-                         handle_rect)
+        pygame.draw.rect(screen, HOVER_COLOR if handle_rect.collidepoint(pygame.mouse.get_pos()) else BLACK, handle_rect)
         volume_label = font.render(f"Głośność: {int(volume)}", True, BLACK)
         screen.blit(volume_label, (volume_rect.x, volume_rect.y - 40))
 
@@ -552,6 +547,8 @@ def open_settings():
 
         pygame.display.flip()
 
+def open_stats():
+    print("Statystyki otwarte!")
 
 # Funkcja do rysowania przycisków
 def draw_button(text, rect, color, hover_color, action=None):
@@ -567,11 +564,6 @@ def draw_button(text, rect, color, hover_color, action=None):
     text_rect = text_surf.get_rect(center=rect.center)
     screen.blit(text_surf, text_rect)
 
-
-def open_stats():
-    print("Statystyki otwarte!")
-
-
 # Główna pętla gry
 running = True
 while running:
@@ -580,12 +572,12 @@ while running:
     mouse_pos = pygame.mouse.get_pos()
     mouse_click = pygame.mouse.get_pressed()
 
-    # Pozycje i stany przycisków
+    # Względne pozycje i stany przycisków
     buttons = [
-        (button_play_image, button_play_hovered_image, (630, 360), start_game),
-        (button_settings_image, button_settings_hovered_image, (676, 460), open_settings),
-        (button_stats_image, button_stats_hovered_image, (625, 560), open_stats),
-        (button_quit_image, button_quit_hovered_image, (180, 640), quit_game),
+        (button_play_image, button_play_hovered_image, (screen_width * 0.636, screen_height * 0.511), start_game),
+        (button_settings_image, button_settings_hovered_image, (screen_width * 0.672, screen_height * 0.632), open_settings),
+        (button_stats_image, button_stats_hovered_image, (screen_width * 0.63, screen_height * 0.78), open_stats),
+        (button_quit_image, button_quit_hovered_image, (screen_width * 0.17, screen_height * 0.82), quit_game),
     ]
 
     for button, button_hovered, pos, action in buttons:
