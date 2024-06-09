@@ -1,2 +1,1 @@
-# NPGprojekt
-lorem ipsum test edycji
+Brak błędów
